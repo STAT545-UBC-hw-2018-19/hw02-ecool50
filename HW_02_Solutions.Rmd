@@ -12,10 +12,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Table of Contents:
 
 - [Introduction](#introduction)
-- [Smell test the data](#Smell-the-test-data)
-- [Explore individual variables](#Explore-individual-variables)
-- [Explore various plot types](#Explore-various-plot-types)
-- [Use filter(), select() and %>%](#Use-filter()-select()-and-%>%)
+- [Smell test the data](##Smell-the-test-data)
+- [Explore individual variables](##Explore-individual-variables)
+- [Explore various plot types](##Explore-various-plot-types)
+- [Use filter(), select() and %>%](##Use-filter()-select()-and-%>%)
 
 
 
