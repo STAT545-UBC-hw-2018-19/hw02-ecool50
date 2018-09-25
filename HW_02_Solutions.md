@@ -20,6 +20,10 @@ Smell the test data
 
 ### Summarize the data
 
+``` r
+ knitr::kable(summary(gapminder))
+```
+
 |     |     country     |   continent  |     year     |    lifeExp    |        pop        |    gdpPercap    |
 |-----|:---------------:|:------------:|:------------:|:-------------:|:-----------------:|:---------------:|
 |     | Afghanistan: 12 |  Africa :624 |  Min. :1952  |  Min. :23.60  |  Min. :6.001e+04  |   Min. : 241.2  |
@@ -32,23 +36,43 @@ Smell the test data
 
 ### Get the type of the data
 
+``` r
+typeof(gapminder)
+```
+
     ## [1] "list"
 
 ### Get the data class
+
+``` r
+class(gapminder)
+```
 
     ## [1] "tbl_df"     "tbl"        "data.frame"
 
 ### Get the number of variables
 
+``` r
+ncol(gapminder)
+```
+
     ## [1] 6
 
 ### Get the number of observations
+
+``` r
+nrow(gapminder)
+```
 
     ## [1] 1704
 
 ### Get the types of variables
 
 I will be using the sapply function that applies a function to each column of the dataframe and prints the output. For the function, I will be using the class function which returns the class of each of the columns of the gapminder data
+
+``` r
+ knitr::kable(sapply(gapminder, class))
+```
 
 |           | x       |
 |-----------|:--------|
@@ -63,6 +87,12 @@ I will be using the sapply function that applies a function to each column of th
 
 ### I will group the gapminder dataset by continent
 
+``` r
+oldops <-options(tibble.width=Inf, tibble.print_max=Inf)
+gm_byContinent <- group_by(gapminder,continent) 
+knitr::kable(head(gm_byContinent))
+```
+
 | country     | continent |  year|  lifeExp|       pop|  gdpPercap|
 |:------------|:----------|-----:|--------:|---------:|----------:|
 | Afghanistan | Asia      |  1952|   28.801|   8425333|   779.4453|
@@ -73,6 +103,10 @@ I will be using the sapply function that applies a function to each column of th
 | Afghanistan | Asia      |  1977|   38.438|  14880372|   786.1134|
 
 ### Summarize the data using the grouped variable
+
+``` r
+ knitr::kable(summary(gm_byContinent))
+```
 
 |     |     country     |   continent  |     year     |    lifeExp    |        pop        |    gdpPercap    |
 |-----|:---------------:|:------------:|:------------:|:-------------:|:-----------------:|:---------------:|
@@ -86,6 +120,10 @@ I will be using the sapply function that applies a function to each column of th
 
 ### We can aslo do a pairs plot for variables of interest in our dataset
 
+``` r
+library(GGally)
+```
+
     ## 
     ## Attaching package: 'GGally'
 
@@ -93,10 +131,16 @@ I will be using the sapply function that applies a function to each column of th
     ## 
     ##     nasa
 
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+``` r
+gm_pairs <- select(gapminder, continent, gdpPercap, lifeExp)
+ggpairs(gm_pairs)
+```
+
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-8-1.png)
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 Explore individual variables
 ----------------------------
@@ -104,6 +148,11 @@ Explore individual variables
 ### For this analyses I will be picking continent, lifeExp, and gdpPercap
 
 ### Get some data summary for gdpPercap for each continent
+
+``` r
+knitr::kable(summarize(gm_byContinent,min(gdpPercap),median(gdpPercap),
+                       mean(gdpPercap),sd(gdpPercap),max(gdpPercap)))
+```
 
 | continent |  min(gdpPercap)|  median(gdpPercap)|  mean(gdpPercap)|  sd(gdpPercap)|  max(gdpPercap)|
 |:----------|---------------:|------------------:|----------------:|--------------:|---------------:|
@@ -115,11 +164,21 @@ Explore individual variables
 
 ### Overlay a histogram with a density plot for gdpPercap
 
+``` r
+ggplot(gapminder, aes(x=gdpPercap)) + geom_histogram(aes(y=..density..), colour="black", fill="white") +
+  geom_density(alpha=.2, fill="#FF6666")
+```
+
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 ### Get some data summary for lifeExp
+
+``` r
+ knitr::kable(summarize(gm_byContinent,min(lifeExp),
+                        median(lifeExp),mean(lifeExp),sd(lifeExp),max(lifeExp)))
+```
 
 | continent |  min(lifeExp)|  median(lifeExp)|  mean(lifeExp)|  sd(lifeExp)|  max(lifeExp)|
 |:----------|-------------:|----------------:|--------------:|------------:|-------------:|
@@ -131,82 +190,148 @@ Explore individual variables
 
 ### Overlay a histogram with a density plot for lifeExp
 
+``` r
+ggplot(gapminder, aes(x=lifeExp)) + geom_histogram(aes(y=..density..), colour="black", fill="white") +
+  geom_density(alpha=.2, fill="#FF6666")
+```
+
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-12-1.png)
+![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 Explore various plot types
 --------------------------
 
 ### Boxplots
 
-![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-13-1.png)
-
-#### Now do a boxplot again, but with a log\_10 transform of the gdpPercap variable
+``` r
+ggplot(gapminder, aes(continent, gdpPercap)) + geom_boxplot()
+```
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
-### Boxplot for lifeExp
+#### Now do a boxplot again, but with a log\_10 transform of the gdpPercap variable
+
+``` r
+ggplot(gapminder, aes(continent, gdpPercap)) + coord_trans(y="log10") + geom_boxplot()
+```
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
+### Boxplot for lifeExp
+
+``` r
+ggplot(gapminder, aes(continent, lifeExp)) + geom_boxplot()
+```
+
+![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-16-1.png)
+
 #### Now instead of transforming it everytime, I will transform it and store it in a new variable
+
+``` r
+gapminder <- mutate(gapminder, log10GdpPercap =log10(gdpPercap))
+```
 
 ### Histograms
 
 #### Plot a stacked historam of log(gdpPercap) as a function of continent
 
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-17-1.png)
-
-#### You can also fill the histogram bars with colors
+``` r
+ggplot(gapminder,aes(x=log10GdpPercap, color=continent))+ geom_histogram()
+```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-18-1.png)
 
-#### You can also stack the histograms if you do not wish to have them overlaying each other
+#### You can also fill the histogram bars with colors
+
+``` r
+ggplot(gapminder,aes(x=log10GdpPercap, color=continent))+ geom_histogram(aes(fill = continent))
+```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
-#### You can also stack the histograms sideways
+#### You can also stack the histograms if you do not wish to have them overlaying each other
+
+``` r
+ggplot(gapminder,aes(x=log10GdpPercap, color=continent))+ geom_histogram() + facet_grid(continent ~ .)
+```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-20-1.png)
 
-#### Do the same for lifeExp
+#### You can also stack the histograms sideways
+
+``` r
+ggplot(gapminder,aes(x=log10GdpPercap, color=continent))+ geom_histogram() + facet_grid(~continent)
+```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-21-1.png)
 
+#### Do the same for lifeExp
+
+``` r
+ggplot(gapminder,aes(x=lifeExp, color=continent))+ geom_histogram()
+```
+
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-22-1.png)
+
+``` r
+ggplot(gapminder,aes(x=lifeExp, color=continent))+ geom_histogram(aes(fill = continent))
+```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-23-1.png)
 
+``` r
+ggplot(gapminder,aes(x=lifeExp, color=continent))+ geom_histogram() + facet_grid(continent ~ .)
+```
+
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-24-1.png)
 
-#### Do a scatterplot of logGdpPercap vs lifeExp
+``` r
+ggplot(gapminder,aes(x=lifeExp, color=continent))+ geom_histogram() + facet_grid(~continent)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-25-1.png)
 
-#### Now color the plot by continent
+#### Do a scatterplot of logGdpPercap vs lifeExp
+
+``` r
+my_plot <- ggplot(gapminder, aes(log10GdpPercap, lifeExp))
+my_plot + geom_point()
+```
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-26-1.png)
 
-#### you can even do a facet wrap with countries
+#### Now color the plot by continent
+
+``` r
+my_plot + geom_point(aes(color = continent))
+```
 
 ![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-27-1.png)
+
+#### you can even do a facet wrap with countries
+
+``` r
+my_plot + geom_point(aes(color = continent)) + facet_wrap(~continent)
+```
+
+![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-28-1.png)
 
 Use select and piping functions
 -------------------------------
@@ -271,7 +396,7 @@ medL.2 <- gapminder %>%
 ggplot(medL, aes(continent, y = medL$`median(lifeExp)`)) + geom_point(aes(color = continent))
 ```
 
-![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-32-1.png)
+![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-33-1.png)
 
 ### We can actually combine all of this into a set of chaining and piping command that does the plot at the end
 
@@ -283,7 +408,7 @@ gapminder %>%
   ggplot(aes(continent, y = medLifeExp)) + geom_point(aes(color = continent))
 ```
 
-![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-33-1.png)
+![](HW_02_Solutions_files/figure-markdown_github/unnamed-chunk-34-1.png)
 
 But I want to do more
 ---------------------
