@@ -2,27 +2,19 @@
 title: "STAT 545 HW 02"
 author: "Elijah Willie"
 date: "September 25, 2018"
-output: github_document
+output:
+    pdf_document:
+        keep_md: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Table of Contents:
-
-- [Introduction](#introduction)
-- [Smell test the data](##Smell-the-test-data)
-- [Explore individual variables](##Explore-individual-variables)
-- [Explore various plot types](##Explore-various-plot-types)
-- [Use filter(), select() and %>%](##Use-filter()-select()-and-%>%)
-
-
-
 ## Introduction
 In this document, I will be exploring the gapminder data further. I will be computing its class, how many variables, and how many obeservations. I will also be interested in the types of variable present and some summary statistics about them. I will also be looking at some variables in more detials by doing some graphical analyses. Hope you find this document eventful.
 
-## load in the required libraries
+### load in the required libraries
 ```{r cars}
 suppressMessages(library("tidyverse"))
 library(gapminder)
@@ -201,7 +193,7 @@ my_plot + geom_point(aes(color = continent))
 my_plot + geom_point(aes(color = continent)) + facet_wrap(~continent)
 ```
 
-## Use filter(), select() and %>%
+## Use select and piping functions
 
 ### I will explore the life expectancy variable for the year 2007. First filter the data to just 2007.
 ```{r}
@@ -245,7 +237,7 @@ gapminder %>%
   ggplot(aes(continent, y = medLifeExp)) + geom_point(aes(color = continent))
 ```
 
-## But I want to do more!
+## But I want to do more
 
 ### Evaluate the given code
 ```{r}
