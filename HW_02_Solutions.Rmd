@@ -2,7 +2,7 @@
 title: "STAT 545 HW 02"
 author: "Elijah Willie"
 date: "September 25, 2018"
-output: github_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +14,7 @@ In this document, I will be exploring the gapminder data further. I will be comp
 
 ## load in the required libraries
 ```{r cars}
-library(tidyverse)
+suppressMessages(library("tidyverse"))
 library(gapminder)
 ```
 
